@@ -1,88 +1,55 @@
 
-var numBalls = 13;
-var spring = 0.05;
-var gravity = 0.03;
-var friction = -0.9;
-var balls = [];
+let birds = 0 ;
 
 function setup() {
-  createCanvas(720, 400);
-  for (var i = 0; i < numBalls; i++) {
-    balls[i] = new Ball(
-      random(width),
-      random(height),
-      random(30, 70),
-      i,
-      balls
-    );
-  }
-  noStroke();
-  fill(255, 204);
+  // put setup code here --> this runs once upon launch
+
+  createCanvas(1000, 500);
+  background(150);
+
 }
 
 function draw() {
-  background(0);
-  balls.forEach(ball => {
-    ball.collide();
-    ball.move();
-    ball.display();
-  });
+  var rad = 60; // Width of the shape
+  var xpos, ypos; // Starting position of shape
+
+  var xspeed = 2.8; // Speed of the shape
+  var yspeed = 2.2; // Speed of the shape
+
+  var xdirection = 1; // Left or Right
+  var ydirection = 1; // Top to Bottom
+  function setup() {
+  createCanvas(720, 400);
+  noStroke();
+  frameRate(30);
+  ellipseMode(RADIUS);
+  // Set the starting position of the shape
+  xpos = width / 2;
+  ypos = height / 2;
 }
 
-function Ball(xin, yin, din, idin, oin) {
-  this.x = xin;
-  this.y = yin;
-  var vx = 0;
-  var vy = 0;
-  this.diameter = din;
-  this.id = idin;
-  this.others = oin;
+function draw() {
+  background(102);
 
-  this.collide = function() {
-    for (var i = this.id + 1; i < numBalls; i++) {
-      // console.log(others[i]);
-      var dx = this.others[i].x - this.x;
-      var dy = this.others[i].y - this.y;
-      var distance = sqrt(dx * dx + dy * dy);
-      var minDist = this.others[i].diameter / 2 + this.diameter / 2;
-      //   console.log(distance);
-      //console.log(minDist);
-      if (distance < minDist) {
-        //console.log("2");
-        var angle = atan2(dy, dx);
-        var targetX = this.x + cos(angle) * minDist;
-        var targetY = this.y + sin(angle) * minDist;
-        var ax = (targetX - this.others[i].x) * spring;
-        var ay = (targetY - this.others[i].y) * spring;
-        vx -= ax;
-        vy -= ay;
-        this.others[i].vx += ax;
-        this.others[i].vy += ay;
-      }
-    }
-  };
+  // Update the position of the shape
+  xpos = xpos + xspeed * xdirection;
+  ypos = ypos + yspeed * ydirection;
 
-  this.move = function() {
-    vy += gravity;
-    this.x += vx;
-    this.y += vy;
-    if (this.x + this.diameter / 2 > width) {
-      this.x = width - this.diameter / 2;
-      vx *= friction;
-    } else if (this.x - this.diameter / 2 < 0) {
-      this.x = this.diameter / 2;
-      vx *= friction;
-    }
-    if (this.y + this.diameter / 2 > height) {
-      this.y = height - this.diameter / 2;
-      vy *= friction;
-    } else if (this.y - this.diameter / 2 < 0) {
-      this.y = this.diameter / 2;
-      vy *= friction;
-    }
-  };
+  // Test to see if the shape exceeds the boundaries of the screen
+  // If it does, reverse its direction by multiplying by -1
+  if (xpos > width - rad || xpos < rad) {
+    xdirection *= -1;
+  }
+  if (ypos > height - rad || ypos < rad) {
+    ydirection *= -1;
+  }
 
-  this.display = function() {
-    ellipse(this.x, this.y, this.diameter, this.diameter);
-  };
-}
+  // Draw the shape
+  ellipse(xpos, ypos, rad, rad);
+  }
+
+console.log("I am in the setup function");
+
+
+
+// write custom functions here
